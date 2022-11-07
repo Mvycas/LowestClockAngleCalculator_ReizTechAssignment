@@ -1,0 +1,65 @@
+@page "/"
+
+<PageTitle>Clock's lesser angle calculator</PageTitle>
+
+<div class="box">
+   <div class="form-group card-body">
+      <h3>Clock's lowest angle calculator</h3>
+      <br/>
+      <div class="row">
+         <label>Hours:</label>
+         <div class="col-4">
+            <input type="number" max="12" placeholder="number between 1-12 " @bind="hours"/>
+         </div>
+      </div>
+      <br/>
+      <div class="row">
+         <label>Minutes:</label>
+         <div class="col-4">
+            <input type="number" max="60" placeholder="number between 0-60: " @bind="minutes"/>
+         </div>
+      </div>
+      
+      @if (!string.IsNullOrEmpty(errorLabel))
+      {
+         <label style="color: red">@errorLabel</label>
+      }
+      
+      <div class="field">
+         <button class="button btn-dark" @onclick="CalculateAngle">Calculate!</button>
+      </div>
+   </div>
+   
+   @if (iteration != 0)
+   {
+   <h2 role="status">Result: @result °</h2>
+   }
+   
+</div>
+
+            
+
+
+@code {
+
+   private int iteration;
+    private int hours;
+    private int minutes;
+    private double result;
+    private double angle = 0;
+    private String errorLabel = String.Empty;
+    
+    private async Task CalculateAngle()
+    {
+       errorLabel = String.Empty;
+       iteration = 0;
+        if (hours > 12 || hours < 0) errorLabel = "Hours must be in range of 0 to 12";
+        else if (minutes > 60 || minutes < 0) errorLabel = "Minutes must be in range of 0 to 60";
+        else
+        {
+           angle = Math.Abs(30 * Convert.ToDouble(hours) - (11 * Convert.ToDouble(minutes) / 2));
+            result = Math.Min(angle, 360-angle);
+            iteration++;
+        }
+    }
+}
